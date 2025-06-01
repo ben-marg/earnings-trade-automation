@@ -12,6 +12,8 @@ import sys
 import sqlite3
 import queue
 
+from time import sleep
+
 # Constants
 PROFIT_ADJUSTMENT_FACTOR = 0.5  # Only 50% of the profits are considered for adjustment
 
@@ -551,4 +553,10 @@ def run_trade_workflow():
         func, pdata = trade_fill_queue.get()
         func(pdata)
 if __name__ == "__main__":
-    sys.exit(run_trade_workflow())
+    while True:
+        try:
+            run_trade_workflow()
+        except Exception as e:
+            print(f"Uncaught exception in run_trade_workflow: {e}")
+        # Sleep until next tick (e.g. 60 seconds)
+        sleep(60)
